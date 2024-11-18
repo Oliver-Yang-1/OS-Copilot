@@ -282,11 +282,13 @@ prompt = {
             :return: the response from the API
             """
         Please begin your code completion:
-        ''',
-        '_USER_TOOL_USAGE_PROMPT': '''
+        ```python
         from oscopilot.tool_repository.manager.tool_request_util import ToolRequestUtil
         tool_request_util = ToolRequestUtil()
         # TODO: your code here
+        ```
+        ''',
+        '_USER_TOOL_USAGE_PROMPT': '''
         ''',
 
         # QA prompts in os
