@@ -59,7 +59,7 @@ class FridayAgent(BaseAgent):
         while self.planner.sub_task_list:
             try:
                 sub_task = self.planner.sub_task_list.pop(0)
-                execution_state = self.executing(sub_task, task)
+                execution_state:ExecutionState = self.executing(sub_task, task)
                 isTaskCompleted, isReplan = self.self_refining(sub_task, execution_state)
                 if isReplan: continue
                 if isTaskCompleted:
@@ -70,6 +70,10 @@ class FridayAgent(BaseAgent):
             except Exception as e:
                 print("Current task execution failed. Error: {}".format(str(e)))
                 break
+        error = None
+        if execution_state.state:
+            error = execution_state.state.error
+        return error,execution_state.result
 
     def self_refining(self, tool_name, execution_state: ExecutionState):
         """
