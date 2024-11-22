@@ -192,6 +192,9 @@ docs/docs_skeleton/build
 docs/docs_skeleton/node_modules
 docs/docs_skeleton/yarn.lock
 
+oscopilot/tool_repository/generated_tools/generated_tools.json
+
+
 # ignore temp files
 temp
 
