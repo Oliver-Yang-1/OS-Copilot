@@ -1,0 +1,48 @@
+{
+  "manifest_version": 3,
+  "name": "Web Copilot",
+  "version": "1.2",
+  "description": "Extracts HTML and sends to an os-copilot server for processing, can also execute any script from the server.",
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "tabs",
+    "storage",
+    "notifications"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["js/content.js"]
+    }
+  ],
+  "action": {
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "web_accessible_resources": [
+  {
+    "resources": [
+      "html/*.html",
+      "css/*.css",
+      "icons/*.png",
+      "js/*.js"
+    ],
+    "matches": ["<all_urls>"]
+  }
+],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
