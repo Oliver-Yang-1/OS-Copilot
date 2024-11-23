@@ -1,3 +1,4 @@
+import json
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi import Form
 
@@ -9,12 +10,14 @@ from oscopilot import (
     FridayRetriever,
 )
 from oscopilot.utils import setup_config, setup_pre_run
-from typing import Optional
+from examples.light_friday.light_friday import LightFriday
+from typing import Dict, List, Optional
 import io
 import sys
 import os
 
 app = FastAPI()
+
 
 def ensure_html_extension(file_location):
     """
@@ -31,17 +34,53 @@ def ensure_html_extension(file_location):
         return new_file_location
     return file_location
 
+
+def run_full_friday(args, task, session_list):
+    print("Running Full Friday ...")
+    agent = FridayAgent(
+        FridayPlanner, FridayRetriever, FridayExecutor, ToolManager, config=args
+    )
+    error, result = agent.run(task=task)
+    list = agent.extract_information(result, "<return>", "</return>")
+    if len(list) > 0:
+        result = " ".join(list)
+
+    return error, result
+
+
+def run_light_friday(args, task, session_list):
+    print("Running Light Friday ...")
+    agent = LightFriday(args)
+    error, result = agent.run(task=task)
+    print("Light Friday error: ", error)
+    print("Light Friday result: ", result)
+    return error, result
+
+
 @app.post("/process-task")
 async def process_task(
-        contain_html: bool = Form(...),  # 从 form-data 获取布尔值
-        html_file: UploadFile = File(None),  # 从 form-data 获取文件
-        userOrder: str = Form(""),  # 从 form-data 获取字符串
+    contain_html: bool = Form(...),  # Specifies if the request includes an HTML file
+    html_file: UploadFile = File(None),  # The uploaded HTML file (optional)
+    userOrder: str = Form(""),  # The user's order
+    session_list: str = Form(""),  # The session list (optional)
+    use_light_friday: bool = Form(False),  # Use Light Friday or full Friday
 ):
     args = setup_config()
     try:
+        # 将 session_list 转换为 Python 对象
+        session_list_data = json.loads(session_list)
+        if not isinstance(session_list_data, list):
+            raise ValueError("session_list is not a list")
+    except json.JSONDecodeError:
+        raise HTTPException(
+            status_code=400, detail={"error": "Invalid session_list format."}
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail={"error": str(e)})
+
+    try:
         if contain_html and html_file is not None:
             # Save the uploaded html_file to working_dir
-            args = setup_config()
             working_dir = args.working_dir
             file_location = os.path.join(working_dir, html_file.filename)
             file_location = ensure_html_extension(file_location)
@@ -52,25 +91,20 @@ async def process_task(
         raise HTTPException(status_code=400, detail={"error": "Invalid HTML content."})
 
     # Generate query using userOrder
-    args.query = userOrder
+    args.query = userOrder + f"\n{session_list}"
     task = setup_pre_run(args)
 
-    # Initialize and run the agent
-    agent = FridayAgent(
-        FridayPlanner, FridayRetriever, FridayExecutor, ToolManager, config=args
-    )
-
-    # Run the agent and get result
-    error, result = agent.run(task=task)
+    error, result = None, None
+    if use_light_friday:
+        error, result = run_light_friday(args, task, session_list)
+    else:
+        error, result = run_full_friday(args, task, session_list)
 
     if error:
         raise HTTPException(
             status_code=500,
             detail={"error": f"{error}"},
         )
-    list = agent.extract_information(result,'<return>','</return>')
-    if len(list)>0:
-        result = ' '.join(list)
 
     return {
         "response": result,
