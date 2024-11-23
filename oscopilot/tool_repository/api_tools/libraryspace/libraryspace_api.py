@@ -6,30 +6,47 @@ import logging
 import re
 from datetime import datetime
 import pandas as pd
+from fastapi import APIRouter, HTTPException,UploadFile,File,Form, Depends
 
-def parse_library_space(url="https://lib.hku.hk/js/availabilityFull.div"):
-    """
-    get the availability of libraries spaces
-    
-    return:
-    jsonformat of library space
-    
-    sample return:
-    [{'Location': 'DEN05DR',
+router = APIRouter()
+
+@router.get("/tools/hku/libraryspace", summary=
+"""
+Fetch and parse real-time availability data of HKU library spaces.
+
+Parameters:
+-----------
+url : str, optional
+    The URL endpoint for library space availability data
+    (default is "https://lib.hku.hk/js/availabilityFull.div")
+
+Returns:
+--------
+list of dict
+    A list of dictionaries containing space availability information.
+    Each dictionary has the following keys:
+    - Location: str, location code
+    - Description: str, human-readable location description
+    - Available: int, number of available spaces
+    - Occupied: int, number of occupied spaces
+    - Total: int, total number of spaces
+
+Returns None if there's an error fetching or parsing the data.
+
+Example:
+--------
+>>> spaces = parse_library_space()
+>>> spaces[0]
+{
+    'Location': 'DEN05DR',
     'Description': 'Dental Library Discussion Rooms',
     'Available': 1,
     'Occupied': 3,
-    'Total': 4},
-    ...
-    {'Location': 'MUS11ST',
-    'Description': 'Music Library Study Space',
-    'Available': 0,
-    'Occupied': 0,
-    'Total': 0}]
-    
-    usage:
-    jsondata = parse_library_space()
-    """
+    'Total': 4
+}          
+""")
+def parse_library_space(url="https://lib.hku.hk/js/availabilityFull.div"):
+
     try:
         # 设置请求头，模拟浏览器访问
         headers = {
