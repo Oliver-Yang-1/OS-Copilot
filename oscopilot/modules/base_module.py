@@ -39,22 +39,16 @@ class BaseModule:
         Returns:
             list[str]: A list of extracted substrings found between the begin and end markers.
         """
-        print(f"Begin string: {begin_str}, End string: {end_str}")
-        print(f"Extracting information from message: \n{message}")
         result = []
-        print("before find")
         _begin = message.find(begin_str)
         _end = message.find(end_str)
-        print("after find")
         while not (_begin == -1 or _end == -1):
-            print(f"Begin: {_begin}, End: {_end}")
             import sys
             sys.stdout.flush()
             result.append(message[_begin + len(begin_str):_end].lstrip("\n"))
             message = message[_end + len(end_str):]
             _begin = message.find(begin_str)
             _end = message.find(end_str)
-        print("after while")
         return result  
 
     def extract_json_from_string(self, text):
