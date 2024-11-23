@@ -81,8 +81,16 @@ print("hello, world")
 Currently, supported languages include Python and Bash."
 '''  #  Try to use `print` or `echo` to output information needed for the subsequent tasks, or the next step might not get the required information.
         light_planner_user_prompt = '''
-        when download the subtitle, you can run the tool from ./OS-Copilot/oscopilot/tool_repository/api_tools/bing/bilibili.py env
-        python OS-Copilot/oscopilot/tool_repository/api_tools/bing/bilibili.py "bvid" --cookie "cookie"
+        1. When download BiliBili subtitle, you can run the tool from ./OS-Copilot/oscopilot/tool_repository/api_tools/bing/bilibili.py env
+        ```Usage
+        python ./oscopilot/tool_repository/api_tools/bing/bilibili.py "bvid" --cookie "cookie" --subtitles # download subtitle
+        python ./oscopilot/tool_repository/api_tools/bing/bilibili.py "bvid" --cookie "cookie" --video # download video
+        ```
+        2. When download Youtube subtitle or video, you can run the tool ./OS-Copilot/oscopilot/tool_repository/api_tools/youtube.py
+        ```Usage
+        python ./oscopilot/tool_repository/api_tools/bing/youtube.py --subtitles "url" # download subtitle
+        python ./oscopilot/tool_repository/api_tools/bing/youtube.py --video "url" # download video
+        ```
         User's information are as follows:
         System Version: {system_version}
         Task: {task}
