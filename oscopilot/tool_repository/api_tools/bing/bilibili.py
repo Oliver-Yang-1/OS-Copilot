@@ -1,8 +1,8 @@
 import argparse
-import json
-import math
-import re
 import requests
+import re
+import os
+import math
 
 
 class SubtitleDownload:
@@ -82,7 +82,6 @@ class SubtitleDownload:
 
     def download_subtitle(self):
         page = self._get_pagelist()
-        print(self._get_player_list())
         subtitle_list = self._get_subtitle(self._get_player_list()[page])
         if subtitle_list:
             srt = ""
@@ -138,8 +137,94 @@ class SubtitleDownload:
             return text
 
 
-class SubtitleDownloadError(Exception):
-    pass
+class BiliBiliDownloader:
+    def __init__(self, url, page, cookie):
+        self.url = url
+        self.page = page
+        self.cookie = cookie
+        self.headers = {
+            "Referer": "https://www.bilibili.com",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+            "Cookie": cookie,
+        }
+
+    def parse_bvid(self):
+        """从URL中解析BV号"""
+        match = re.search(r"BV\w+", self.url)
+        if match:
+            return match.group(0)
+        else:
+            raise ValueError("无法从URL中解析BV号")
+
+    def get_cid(self, bvid):
+        """获取视频的CID和分集信息"""
+        api_url = f"https://api.bilibili.com/x/player/pagelist?bvid={bvid}"
+        response = requests.get(api_url, headers=self.headers)
+        data = response.json()
+        if data["code"] == 0:
+            cids = [{"cid": item["cid"], "part": item["part"]} for item in data["data"]]
+            return cids
+        else:
+            raise Exception(f"获取CID失败：{data['message']}")
+
+    def get_video_url(self, bvid, cid):
+        """获取视频播放地址"""
+        api_url = f"https://api.bilibili.com/x/player/playurl?bvid={bvid}&cid={cid}&qn=80&fnval=16"
+        response = requests.get(api_url, headers=self.headers)
+        data = response.json()
+        if data["code"] == 0:
+            video_url = data["data"]["dash"]["video"][0]["baseUrl"]
+            audio_url = data["data"]["dash"]["audio"][0]["baseUrl"]
+            return video_url, audio_url
+        else:
+            raise Exception(f"获取视频地址失败：{data['message']}")
+
+    def download(self, url, filename):
+        """下载文件"""
+        response = requests.get(url, headers=self.headers, stream=True)
+        total_size = int(response.headers.get("content-length", 0))
+        with open(filename, "wb") as file, requests.get(
+            url, headers=self.headers, stream=True
+        ) as response:
+            downloaded = 0
+            for data in response.iter_content(chunk_size=1024):
+                file.write(data)
+                downloaded += len(data)
+                print(f"\r已下载：{downloaded / total_size:.2%}", end="")
+        print(f"\n{filename} 下载完成！")
+
+    def merge_video_audio(self, video_file, audio_file, output_file):
+        """合并视频和音频"""
+        os.system(
+            f"ffmpeg -i {video_file} -i {audio_file} -c:v copy -c:a aac {output_file}"
+        )
+        print(f"合并完成：{output_file}")
+
+    def run(self):
+        bvid = self.parse_bvid()
+        cids = self.get_cid(bvid)
+        print("视频分集：")
+        for i, cid_info in enumerate(cids):
+            print(f"{i + 1}. {cid_info['part']} (CID: {cid_info['cid']})")
+
+        index = self.page - 1
+        if self.page <= 0 or self.page > len(cids):
+            index = int(input("请选择要下载的分集序号：")) - 1
+        cid = cids[index]["cid"]
+
+        print("获取视频地址...")
+        video_url, audio_url = self.get_video_url(bvid, cid)
+
+        print("正在下载视频...")
+        self.download(video_url, "video.mp4")
+
+        print("正在下载音频...")
+        self.download(audio_url, "audio.mp3")
+
+        print("正在合并视频和音频...")
+        self.merge_video_audio("video.mp4", "audio.mp3", "output.mp4")
+
+        print("完成！视频已保存为 output.mp4")
 
 
 def parse_bvid_from_url(url: str):
@@ -147,7 +232,7 @@ def parse_bvid_from_url(url: str):
     pattern = r"BV(\w+)"
     match = re.search(pattern, url)
     if match:
-        return match.group(1)
+        return "BV" + match.group(1)
     else:
         raise ValueError("无法从URL中解析出BVID")
 
@@ -167,17 +252,25 @@ def main():
     parser.add_argument(
         "--page", type=int, default=1, help="The page (集数) to download subtitles from"
     )
+    parser.add_argument("--video", action="store_true", help="下载视频")
+    parser.add_argument("--subtitle", action="store_true", help="下载字幕")
 
     args = parser.parse_args()
+    # 下载视频
+    if args.video:
+        downloader = BiliBiliDownloader(args.url, args.page, args.cookie)
+        downloader.run()
 
-    try:
-        # 解析命令行传递的参数
-        bvid = parse_bvid_from_url(args.url)
-        downloader = SubtitleDownload(bvid, args.page, args.lang, args.cookie)
-        subtitles = downloader.download_subtitle()
-        print(subtitles)
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
+    # 下载字幕
+    if args.subtitle:
+        try:
+            # 解析命令行传递的参数
+            bvid = parse_bvid_from_url(args.url)
+            downloader = SubtitleDownload(bvid, args.page, args.lang, args.cookie)
+            subtitles = downloader.download_subtitle()
+            print(subtitles)
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
 
 
 if __name__ == "__main__":
