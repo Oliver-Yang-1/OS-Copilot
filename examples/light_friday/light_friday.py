@@ -86,10 +86,14 @@ Currently, supported languages include Python and Bash."
         python ./oscopilot/tool_repository/api_tools/bing/bilibili.py "bvid" --cookie "cookie" --subtitles # download subtitle
         python ./oscopilot/tool_repository/api_tools/bing/bilibili.py "bvid" --cookie "cookie" --video # download video
         ```
-        2. When download Youtube subtitle or video, you can run the tool ./OS-Copilot/oscopilot/tool_repository/api_tools/youtube.py
-        ```Usage
+        2. When download Youtube subtitle or video, you can run the tool ./OS-Copilot/oscopilot/tool_repository/api_tools/bing/youtube.py
+        ```UsageA
         python ./oscopilot/tool_repository/api_tools/bing/youtube.py --subtitles "url" # download subtitle
         python ./oscopilot/tool_repository/api_tools/bing/youtube.py --video "url" # download video
+        ```
+        3. When query library spaces, you can run the tool ./OS-Copilot/oscopilot/tool_repository/api_tools/libraryspace/libraryspace.py
+        ```Usage
+        python ./oscopilot/tool_repository/api_tools/libraryspace/libraryspace.py # print out the json data of the libraryspace
         ```
         User's information are as follows:
         System Version: {system_version}
@@ -134,7 +138,7 @@ Currently, supported languages include Python and Bash."
 if __name__ == "__main__":
     args = setup_config()
     if not args.query:
-        args.query = "Plot AAPL and META's normalized stock prices"
+        args.query = "Get library spaces, print them in table format"
     task = setup_pre_run(args)
 
     light_friday = LightFriday(args)

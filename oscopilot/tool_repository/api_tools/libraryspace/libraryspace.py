@@ -1,4 +1,3 @@
-
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -8,43 +7,7 @@ from datetime import datetime
 import pandas as pd
 from fastapi import APIRouter, HTTPException,UploadFile,File,Form, Depends
 
-router = APIRouter()
 
-@router.get("/tools/hku/libraryspace", summary=
-"""
-Fetch and parse real-time availability data of HKU library spaces.
-
-Parameters:
------------
-url : str, optional
-    The URL endpoint for library space availability data
-    (default is "https://lib.hku.hk/js/availabilityFull.div")
-
-Returns:
---------
-list of dict
-    A list of dictionaries containing space availability information.
-    Each dictionary has the following keys:
-    - Location: str, location code
-    - Description: str, human-readable location description
-    - Available: int, number of available spaces
-    - Occupied: int, number of occupied spaces
-    - Total: int, total number of spaces
-
-Returns None if there's an error fetching or parsing the data.
-
-Example:
---------
->>> spaces = parse_library_space()
->>> spaces[0]
-{
-    'Location': 'DEN05DR',
-    'Description': 'Dental Library Discussion Rooms',
-    'Available': 1,
-    'Occupied': 3,
-    'Total': 4
-}          
-""")
 def parse_library_space(url="https://lib.hku.hk/js/availabilityFull.div"):
 
     try:
@@ -142,3 +105,15 @@ def parse_library_space(url="https://lib.hku.hk/js/availabilityFull.div"):
     except Exception as e:
         logging.error(f"Error fetching data: {e}")
         return None
+
+
+def main():
+    res=parse_library_space()
+    print(res)
+    
+
+
+
+if __name__ == "__main__":
+    main()
+

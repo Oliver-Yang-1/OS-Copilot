@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/root/OS-Copilot/oscopilot/tool_repository/api_tools/libraryspace/libraryspace.py", line 11, in <module>
+    from libraryspace import parse_library_space
+  File "/root/OS-Copilot/oscopilot/tool_repository/api_tools/libraryspace/libraryspace.py", line 11, in <module>
+    from libraryspace import parse_library_space
+ImportError: cannot import name 'parse_library_space' from partially initialized module 'libraryspace' (most likely due to a circular import) (/root/OS-Copilot/oscopilot/tool_repository/api_tools/libraryspace/libraryspace.py)

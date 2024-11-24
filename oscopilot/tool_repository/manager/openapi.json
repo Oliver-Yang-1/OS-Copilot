@@ -191,35 +191,14 @@
         },
         "/tools/hku/libraryspace": {
             "get": {
-                "summary": "\nFetch and parse real-time availability data of HKU library spaces.\n\nParameters:\n-----------\nurl : str, optional\n    The URL endpoint for library space availability data\n    (default is \"https://lib.hku.hk/js/availabilityFull.div\")\n\nReturns:\n--------\nlist of dict\n    A list of dictionaries containing space availability information.\n    Each dictionary has the following keys:\n    - Location: str, location code\n    - Description: str, human-readable location description\n    - Available: int, number of available spaces\n    - Occupied: int, number of occupied spaces\n    - Total: int, total number of spaces\n\nReturns None if there's an error fetching or parsing the data.\n\nExample:\n--------\n>>> spaces = parse_library_space()\n>>> spaces[0]\n{\n    'Location': 'DEN05DR',\n    'Description': 'Dental Library Discussion Rooms',\n    'Available': 1,\n    'Occupied': 3,\n    'Total': 4\n}          \n",
-                "operationId": "parse_library_space_tools_hku_libraryspace_get",
-                "parameters": [
-                    {
-                        "name": "url",
-                        "in": "query",
-                        "required": false,
-                        "schema": {
-                            "default": "https://lib.hku.hk/js/availabilityFull.div",
-                            "title": "Url"
-                        }
-                    }
-                ],
+                "summary": "\nFetch and parse real-time availability data of HKU library spaces.\n\nReturns:\n--------\nlist of dict\n    A list of dictionaries containing space availability information.\n    Each dictionary has the following keys:\n    - Location: str, location code\n    - Description: str, human-readable location description\n    - Available: int, number of available spaces\n    - Occupied: int, number of occupied spaces\n    - Total: int, total number of spaces\n\nReturns None if there's an error fetching or parsing the data.\n\nExample:\n--------\n>>> spaces = parse_library_space()\n>>> spaces[0]\n{\n    'Location': 'DEN05DR',\n    'Description': 'Dental Library Discussion Rooms',\n    'Available': 1,\n    'Occupied': 3,\n    'Total': 4\n}          \n",
+                "operationId": "get_library_spaces_tools_hku_libraryspace_get",
                 "responses": {
                     "200": {
                         "description": "Successful Response",
                         "content": {
                             "application/json": {
                                 "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
                             }
                         }
                     }

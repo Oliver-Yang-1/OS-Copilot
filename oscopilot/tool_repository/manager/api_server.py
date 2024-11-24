@@ -12,7 +12,7 @@ from oscopilot.tool_repository.api_tools.audio2text.audio2text_service import ro
 from oscopilot.tool_repository.api_tools.image_caption.image_caption_service import router as image_caption_router
 from oscopilot.tool_repository.api_tools.wolfram_alpha.wolfram_alpha import router as wolfram_alpha_router
 # new router 
-from oscopilot.tool_repository.api_tools.libraryspace.libraryspace_api import router as libraryspace_router
+from oscopilot.tool_repository.api_tools.libraryspace.libraryspace_services import router as libraryspace_router
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
