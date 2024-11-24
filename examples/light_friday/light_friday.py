@@ -107,13 +107,5 @@ Currently, supported languages include Python and Bash."
                 message.append({"role": "user", "content": "Please continue. If all tasks have been completed, reply with 'Execution Complete'. If you believe subsequent tasks cannot continue, reply with 'Execution Interrupted', including the reasons why the tasks cannot proceed, and provide the user with some possible solutions."})
             
             if 'Execution Complete' in response or 'Execution Interrupted' in response:
+                return response
                 break
-
-
-args = setup_config()
-if not args.query:
-    args.query = "Plot AAPL and META's normalized stock prices"
-task = setup_pre_run(args)
-
-light_friday = LightFriday(args)
-light_friday.run(task)  # list
