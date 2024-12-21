@@ -6,13 +6,18 @@ from oscopilot.utils.server_config import ConfigManager
 dotenv.load_dotenv(dotenv_path='.env', override=True)
 app = FastAPI()
 
+import sys
+print(sys.path)
+sys.path.append('/home/evi0ned/NLP/OS-Copilot/oscopilot/tool_repository/api_tools/google_tools')
+
 # Import your services
 from oscopilot.tool_repository.api_tools.bing.bing_service import router as bing_router
 from oscopilot.tool_repository.api_tools.audio2text.audio2text_service import router as audio2text_router
 from oscopilot.tool_repository.api_tools.image_caption.image_caption_service import router as image_caption_router
 from oscopilot.tool_repository.api_tools.wolfram_alpha.wolfram_alpha import router as wolfram_alpha_router
+from google_calendar import router as google_calendar_router
 # new router 
-from oscopilot.tool_repository.api_tools.libraryspace.libraryspace_api import router as libraryspace_router
+from oscopilot.tool_repository.api_tools.libraryspace.libraryspace_services import router as libraryspace_router
 
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
@@ -39,10 +44,11 @@ services = {
     "autio2text": audio2text_router,
     "image_caption": image_caption_router,
     "wolfram_alpha": wolfram_alpha_router,
+    "google_calendar": google_calendar_router,
     "libraryspace": libraryspace_router, 
 }
 
-server_list = ["bing", "autio2text", "image_caption", "libraryspace"]
+server_list = ["bing", "autio2text", "image_caption", "google_calendar", "libraryspace"]
 
 # Include only the routers for the services listed in server_list
 for service in server_list:

@@ -1,0 +1,10 @@
+{
+    "search_files_for_word": {
+        "code": "def search_files_for_word(text_files, directory, word):\n    \"\"\"\n    Searches for a specific word in each text file within a given directory and records the names of files containing the word.\n\n    Args:\n    text_files (list of str): A list of text file paths to be searched.\n    directory (str): The directory where the text files are located.\n    word (str): The word to search for within the text files.\n\n    Returns:\n    list of str: A list of file names that contain the specified word.\n    \"\"\"\n    import os\n\n    files_with_word = []\n\n    for file_path in text_files:\n        full_path = os.path.join(directory, file_path)\n        with open(full_path, 'r', encoding='utf-8') as file:\n            content = file.read()\n            if word in content:\n                files_with_word.append(file_path)\n\n    return files_with_word",
+        "description": "Searches for a specific word in each text file within a given directory and records the names of files containing the word"
+    },
+    "determine_date_for_tomorrow": {
+        "code": "def determine_date_for_tomorrow():\n    \"\"\"\n    Determines the date for tomorrow based on the current system date.\n\n    Returns:\n    str: A string representing the date for tomorrow in the format 'YYYY-MM-DD'.\n    \"\"\"\n    from datetime import datetime, timedelta\n\n    # Get the current date\n    today = datetime.now()\n\n    # Calculate tomorrow's date\n    tomorrow = today + timedelta(days=1)\n\n    # Return the date for tomorrow in 'YYYY-MM-DD' format\n    return tomorrow.strftime('%Y-%m-%d')",
+        "description": "Determines the date for tomorrow based on the current system date"
+    }
+}

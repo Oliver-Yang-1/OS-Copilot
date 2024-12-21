@@ -1,4 +1,5 @@
 import json
+import json
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi import Form
 
@@ -15,9 +16,23 @@ from typing import Dict, List, Optional
 import io
 import sys
 import os
+from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import Form
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+origins = [
+    "*",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 def ensure_html_extension(file_location):
     """
@@ -51,10 +66,11 @@ def run_full_friday(args, task, session_list):
 def run_light_friday(args, task, session_list):
     print("Running Light Friday ...")
     agent = LightFriday(args)
-    error, result = agent.run(task=task)
-    print("Light Friday error: ", error)
+    result = agent.run(task=task)
+    #print("Light Friday error: ", error)
     print("Light Friday result: ", result)
-    return error, result
+    return result
+
 
 
 @app.post("/process-task")
@@ -105,7 +121,7 @@ async def process_task(
             status_code=500,
             detail={"error": f"{error}"},
         )
-
+    
     return {
         "response": result,
         "script": "Not implemented yet",
@@ -120,4 +136,4 @@ def hello_world():
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

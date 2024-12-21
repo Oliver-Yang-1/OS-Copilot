@@ -103,7 +103,9 @@ def setup_config():
 
     return args
 
-
+google_key = {}
+bing_api_key = ""
+api_tool_list_dir = "/home/evi0ned/NLP/OS-Copilot/oscopilot/tool_repository/api_tools"
 def setup_pre_run(args):
     """
     Sets up pre-run tasks and logging.
@@ -115,6 +117,7 @@ def setup_pre_run(args):
         str: A string containing information about the task.
     """    
     task = 'Your task is: {0}'.format(args.query)
+    task += " The packages needed is installed so there's no need to provide pip install, use time zone of Asia/Shanghai if needed. If you need the user authentication, then return the link. The google credintials is: {google_key}, the bing api key is: {bing_api_key}, you can use it to search, there're some tools available for you in {api_tool_list_dir}".format(google_key=google_key, bing_api_key=bing_api_key, api_tool_list_dir=api_tool_list_dir)
     if args.query_file_path != '':
         task = task + '\nThe path of the files you need to use: {0}'.format(args.query_file_path)
 
