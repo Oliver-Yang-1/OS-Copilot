@@ -51,7 +51,7 @@ def login(user_id: str):
         include_granted_scopes='true',
         prompt='consent'
     )
-    # 将 state 与 user_id 关联（实际应用中应存储在数据库中）
+    # 将 state 与 user_id 关联
     user_credentials[user_id] = {'state': state}
     return {"authorization_url": authorization_url}
 
@@ -71,7 +71,7 @@ def oauth2callback(request: Request, user_id: str):
     )
     flow.fetch_token(code=code)
     creds = flow.credentials
-    # 存储用户凭据（实际应用中应安全存储）
+    # 存储用户凭据
     user_credentials[user_id]['creds'] = json.loads(creds.to_json())
     return {"message": "Authorization successful"}
 
@@ -165,8 +165,3 @@ async def delete_event(event_id: str):
         return {"message": "Event deleted"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-# 在主应用中包含路由
-# from fastapi import FastAPI
-# app = FastAPI()
-# app.include_router(router)
