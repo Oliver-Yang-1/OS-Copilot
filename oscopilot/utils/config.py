@@ -103,8 +103,8 @@ def setup_config():
 
     return args
 
-google_key = {"installed":{"client_id":"700312854739-ca9sr3f82cvd6lve16rcdscru2abkr2a.apps.googleusercontent.com","project_id":"steam-style-197813","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_secret":"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","redirect_uris":["http://localhost"]}}
-bing_api_key = "047ccf561ced4512812879157cbd33d2"
+google_key = {}
+bing_api_key = ""
 api_tool_list_dir = "/home/evi0ned/NLP/OS-Copilot/oscopilot/tool_repository/api_tools"
 def setup_pre_run(args):
     """
