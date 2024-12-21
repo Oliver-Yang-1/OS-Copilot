@@ -1,1 +1,362 @@
-{"openapi":"3.1.0","info":{"title":"FastAPI","version":"0.1.0"},"paths":{"/tools/bing/image_search":{"get":{"summary":"Searches for images related to the provided keywords using the Bing Image Search API. It allows specifying the number of images to return (top_k) and retries the search up to a specified number of times (max_retry) in case of failures. The search is performed with a moderate safe search filter and is intended for use within an environments that requires image search capabilities. The function returns a list of images, including their names, URLs, and thumbnail information. If the search fails after the maximum number of retries, it raises a runtime error.","operationId":"image_search_tools_bing_image_search_get","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/QueryItemV2"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/tools/bing/searchv2":{"get":{"summary":"Execute Bing Search - returns top web snippets related to the query. Avoid using complex filters like 'site:'. For detailed page content, further use the web browser tool.","operationId":"bing_search_v2_tools_bing_searchv2_get","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/QueryItemV2"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/tools/bing/load_pagev2":{"get":{"summary":"Web browser tool for detailed content retrieval and specific information extraction from a target URL.In the case of Wikipedia, the number of tokens on such pages is often too large to load the entire page, so the 'query' parameter must be given to perform a similarity query to find the most relevant pieces of content. The 'query' parameter should be assigned with your task description to find the most relevant content of the web page.It is important that your 'query' must retain enough details about the task, such as time, location, quantity, and other information, to ensure that the results obtained are accurate enough.","operationId":"load_page_v2_tools_bing_load_pagev2_get","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/PageItemV2"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/tools/audio2text":{"post":{"summary":"A tool that converts audio to natural language text.","operationId":"audio2text_tools_audio2text_post","requestBody":{"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Body_audio2text_tools_audio2text_post"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/tools/image_caption":{"post":{"summary":"When the task is to question and answer based on local picture, you have to use the Image Caption tool, who can directly analyze picture to answer question and complete task. For local images you want to understand, you need to only give the image_file without url. It is crucial to provide the 'query' parameter, and its value must be the full content of the task itself.","operationId":"image_search_tools_image_caption_post","requestBody":{"content":{"multipart/form-data":{"schema":{"allOf":[{"$ref":"#/components/schemas/Body_image_search_tools_image_caption_post"}],"title":"Body"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/tools/calendar/login":{"get":{"summary":"User login to authorize Google Calendar access","operationId":"login_tools_calendar_login_get","parameters":[{"name":"user_id","in":"query","required":true,"schema":{"type":"string","title":"User Id"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/tools/calendar/oauth2callback":{"get":{"summary":"Handle OAuth2 callback","operationId":"oauth2callback_tools_calendar_oauth2callback_get","parameters":[{"name":"user_id","in":"query","required":true,"schema":{"type":"string","title":"User Id"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/tools/calendar/create":{"get":{"summary":"Create a new calendar event using Google calendar","operationId":"create_event_tools_calendar_create_get","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/EventCreate"}}},"required":true},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/tools/calendar/retrieve":{"get":{"summary":"Retrieve the list of calendar event using Google calendar","operationId":"retrieve_events_tools_calendar_retrieve_get","parameters":[{"name":"max_results","in":"query","required":false,"schema":{"type":"integer","default":10,"title":"Max Results"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/tools/calendar/update/{event_id}":{"get":{"summary":"Update an existing calendar event using Google calendar","operationId":"update_event_tools_calendar_update__event_id__get","parameters":[{"name":"event_id","in":"path","required":true,"schema":{"type":"string","title":"Event Id"}}],"requestBody":{"required":true,"content":{"application/json":{"schema":{"$ref":"#/components/schemas/EventUpdate"}}}},"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}},"/tools/calendar/delete/{event_id}":{"get":{"summary":"Delete an existing calendar event using Google calendar","operationId":"delete_event_tools_calendar_delete__event_id__get","parameters":[{"name":"event_id","in":"path","required":true,"schema":{"type":"string","title":"Event Id"}}],"responses":{"200":{"description":"Successful Response","content":{"application/json":{"schema":{}}}},"422":{"description":"Validation Error","content":{"application/json":{"schema":{"$ref":"#/components/schemas/HTTPValidationError"}}}}}}}},"components":{"schemas":{"Body_audio2text_tools_audio2text_post":{"properties":{"file":{"type":"string","format":"binary","title":"File"}},"type":"object","required":["file"],"title":"Body_audio2text_tools_audio2text_post"},"Body_image_search_tools_image_caption_post":{"properties":{"query":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Query","default":"What's in this image?"},"url":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Url"},"image_file":{"anyOf":[{"type":"string","format":"binary"},{"type":"null"}],"title":"Image File"}},"type":"object","title":"Body_image_search_tools_image_caption_post"},"EventCreate":{"properties":{"summary":{"type":"string","title":"Summary","description":"Title","example":"Meeting"},"location":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Location","description":"Event Location","example":"Meeting Room"},"description":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Description","description":"Event Description","example":"Discussion"},"start_time":{"type":"string","format":"date-time","title":"Start Time","description":"Event Start Time","example":"2023-10-28T09:00:00+08:00"},"end_time":{"type":"string","format":"date-time","title":"End Time","description":"Event End Time","example":"2023-10-28T10:00:00+08:00"},"time_zone":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Time Zone","description":"Time Zone","default":"Asia/Shanghai","example":"Asia/Shanghai"}},"type":"object","required":["summary","start_time","end_time"],"title":"EventCreate"},"EventUpdate":{"properties":{"summary":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Summary","description":"Event Title","example":"Updated Meeting"},"location":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Location","description":"Event Location","example":"New Meeting Room"},"description":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Description","description":"Event Description","example":"Updated Discussion"},"start_time":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"Start Time","description":"Event Start Time","example":"2023-10-28T09:00:00+08:00"},"end_time":{"anyOf":[{"type":"string","format":"date-time"},{"type":"null"}],"title":"End Time","description":"Event End Time","example":"2023-10-28T10:00:00+08:00"},"time_zone":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Time Zone","description":"Time Zone","example":"Asia/Shanghai"}},"type":"object","title":"EventUpdate"},"HTTPValidationError":{"properties":{"detail":{"items":{"$ref":"#/components/schemas/ValidationError"},"type":"array","title":"Detail"}},"type":"object","title":"HTTPValidationError"},"PageItemV2":{"properties":{"url":{"type":"string","title":"Url"},"query":{"anyOf":[{"type":"string"},{"type":"null"}],"title":"Query"}},"type":"object","required":["url"],"title":"PageItemV2"},"QueryItemV2":{"properties":{"query":{"type":"string","title":"Query"},"top_k":{"anyOf":[{"type":"integer"},{"type":"null"}],"title":"Top K"}},"type":"object","required":["query"],"title":"QueryItemV2"},"ValidationError":{"properties":{"loc":{"items":{"anyOf":[{"type":"string"},{"type":"integer"}]},"type":"array","title":"Location"},"msg":{"type":"string","title":"Message"},"type":{"type":"string","title":"Error Type"}},"type":"object","required":["loc","msg","type"],"title":"ValidationError"}}}}
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/tools/bing/image_search": {
+            "get": {
+                "summary": "Searches for images related to the provided keywords using the Bing Image Search API. It allows specifying the number of images to return (top_k) and retries the search up to a specified number of times (max_retry) in case of failures. The search is performed with a moderate safe search filter and is intended for use within an environments that requires image search capabilities. The function returns a list of images, including their names, URLs, and thumbnail information. If the search fails after the maximum number of retries, it raises a runtime error.",
+                "operationId": "image_search_tools_bing_image_search_get",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/QueryItemV2"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tools/bing/searchv2": {
+            "get": {
+                "summary": "Execute Bing Search - returns top web snippets related to the query. Avoid using complex filters like 'site:'. For detailed page content, further use the web browser tool.",
+                "operationId": "bing_search_v2_tools_bing_searchv2_get",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/QueryItemV2"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tools/bing/load_pagev2": {
+            "get": {
+                "summary": "Web browser tool for detailed content retrieval and specific information extraction from a target URL.In the case of Wikipedia, the number of tokens on such pages is often too large to load the entire page, so the 'query' parameter must be given to perform a similarity query to find the most relevant pieces of content. The 'query' parameter should be assigned with your task description to find the most relevant content of the web page.It is important that your 'query' must retain enough details about the task, such as time, location, quantity, and other information, to ensure that the results obtained are accurate enough.",
+                "operationId": "load_page_v2_tools_bing_load_pagev2_get",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PageItemV2"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tools/audio2text": {
+            "post": {
+                "summary": "A tool that converts audio to natural language text.",
+                "operationId": "audio2text_tools_audio2text_post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_audio2text_tools_audio2text_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tools/image_caption": {
+            "post": {
+                "summary": "When the task is to question and answer based on local picture, you have to use the Image Caption tool, who can directly analyze picture to answer question and complete task. For local images you want to understand, you need to only give the image_file without url. It is crucial to provide the 'query' parameter, and its value must be the full content of the task itself.",
+                "operationId": "image_search_tools_image_caption_post",
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/components/schemas/Body_image_search_tools_image_caption_post"
+                                    }
+                                ],
+                                "title": "Body"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/tools/hku/libraryspace": {
+            "get": {
+                "summary": "\nFetch and parse real-time availability data of HKU library spaces.\n\nReturns:\n--------\nlist of dict\n    A list of dictionaries containing space availability information.\n    Each dictionary has the following keys:\n    - Location: str, location code\n    - Description: str, human-readable location description\n    - Available: int, number of available spaces\n    - Occupied: int, number of occupied spaces\n    - Total: int, total number of spaces\n\nReturns None if there's an error fetching or parsing the data.\n\nExample:\n--------\n>>> spaces = parse_library_space()\n>>> spaces[0]\n{\n    'Location': 'DEN05DR',\n    'Description': 'Dental Library Discussion Rooms',\n    'Available': 1,\n    'Occupied': 3,\n    'Total': 4\n}          \n",
+                "operationId": "get_library_spaces_tools_hku_libraryspace_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Body_audio2text_tools_audio2text_post": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_audio2text_tools_audio2text_post"
+            },
+            "Body_image_search_tools_image_caption_post": {
+                "properties": {
+                    "query": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Query",
+                        "default": "What's in this image?"
+                    },
+                    "url": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Url"
+                    },
+                    "image_file": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "binary"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Image File"
+                    }
+                },
+                "type": "object",
+                "title": "Body_image_search_tools_image_caption_post"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "PageItemV2": {
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "title": "Url"
+                    },
+                    "query": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Query"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "url"
+                ],
+                "title": "PageItemV2"
+            },
+            "QueryItemV2": {
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "title": "Query"
+                    },
+                    "top_k": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Top K"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "query"
+                ],
+                "title": "QueryItemV2"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        }
+    }
+}

@@ -1,4 +1,8 @@
 # This code is based on Open Interpreter. Original source: https://github.com/OpenInterpreter/open-interpreter
+import os
+import sys
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+sys.path.insert(0, project_root)
 
 from oscopilot.utils import setup_config, setup_pre_run
 from oscopilot.modules.base_module import BaseModule
@@ -6,7 +10,6 @@ import re
 from rich.console import Console
 from rich.markdown import Markdown
 import dotenv
-import os
 
 dotenv.load_dotenv(override=True)
 MODEL_NAME = os.getenv('MODEL_NAME')
@@ -78,10 +81,25 @@ print("hello, world")
 Currently, supported languages include Python and Bash."
 '''  #  Try to use `print` or `echo` to output information needed for the subsequent tasks, or the next step might not get the required information.
         light_planner_user_prompt = '''
+        1. When download BiliBili subtitle, you can run the tool from ./OS-Copilot/oscopilot/tool_repository/api_tools/bing/bilibili.py env
+        ```Usage
+        python ./oscopilot/tool_repository/api_tools/bing/bilibili.py "bvid" --cookie "cookie" --subtitles # download subtitle
+        python ./oscopilot/tool_repository/api_tools/bing/bilibili.py "bvid" --cookie "cookie" --video # download video
+        ```
+        2. When download Youtube subtitle or video, you can run the tool ./OS-Copilot/oscopilot/tool_repository/api_tools/bing/youtube.py
+        ```UsageA
+        python ./oscopilot/tool_repository/api_tools/bing/youtube.py --subtitles "url" # download subtitle
+        python ./oscopilot/tool_repository/api_tools/bing/youtube.py --video "url" # download video
+        ```
+        3. When query library spaces, you can run the tool ./OS-Copilot/oscopilot/tool_repository/api_tools/libraryspace/libraryspace.py
+        ```Usage
+        python ./oscopilot/tool_repository/api_tools/libraryspace/libraryspace.py # print out the json data of the libraryspace
+        ```
         User's information are as follows:
         System Version: {system_version}
         Task: {task}
-        Current Working Directiory: {working_dir}'''.format(system_version=self.system_version, task=task, working_dir=self.environment.working_dir)
+        Current Working Directiory: {working_dir}
+        '''.format(system_version=self.system_version, task=task, working_dir=self.environment.working_dir)
         
         message = [
             {"role": "system", "content": light_planner_sys_prompt},
@@ -109,3 +127,21 @@ Currently, supported languages include Python and Bash."
             if 'Execution Complete' in response or 'Execution Interrupted' in response:
                 return response
                 break
+
+        error = None
+        if 'Execution Interrupted' in response:
+            error = response
+
+        return error, response
+
+
+
+if __name__ == "__main__":
+    args = setup_config()
+    if not args.query:
+        args.query = "Get library spaces, print them in table format"
+    task = setup_pre_run(args)
+
+    light_friday = LightFriday(args)
+    light_friday.run(task)  # list
+

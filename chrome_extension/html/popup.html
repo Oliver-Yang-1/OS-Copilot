@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chrome Copilot</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+  <script src="../js/popup.js" defer></script>
+</head>
+<body>
+  <div class="popup-container">
+    <!-- 顶部导航栏 -->
+    <div class="header">
+            <!-- 添加左侧图标 -->
+      <div class="icon">
+        <img src="../icons/icon16.png" alt="Logo" />
+      </div>
+      <div class="title">Chrome Copilot</div>
+      <div class="settings-button" id="settings-button"><i class="fas fa-cog"></i></div>
+      <div class="close-button" id="close-button"><i class="fas fa-times"></i></div>
+    </div>
+
+    <!-- 回答内容区域 -->
+    <div class="chat-area" id="chat-area">
+      <!-- 示例系统消息 -->
+      <div class="message system">Hello! How can I assist you today?</div>
+    </div>
+
+    <!-- 悬浮消息框 -->
+    <div class="floating-input">
+      <button class="icon-button" id="add-button"><i class="fas fa-plus"></i></button>
+      <input type="text" id="user-input" placeholder="Message Copilot" />
+      <button class="icon-button" id="microphone-button"><i class="fas fa-microphone"></i></button>
+      <button class="send-button" id="send-button"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+</body>
+</html>

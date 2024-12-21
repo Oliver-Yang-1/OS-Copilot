@@ -1,7 +1,7 @@
 import re
 import json
 import os
-from oscopilot.utils.llms import OpenAI, OLLAMA
+from oscopilot.utils.llms import OpenAI, OLLAMA, Volcano
 # from oscopilot.environments.py_env import PythonEnv
 # from oscopilot.environments.py_jupyter_env import PythonJupyterEnv
 from oscopilot.environments import Env
@@ -20,6 +20,8 @@ class BaseModule:
             self.llm = OpenAI()
         elif MODEL_TYPE == "OLLAMA":
             self.llm = OLLAMA()
+        elif MODEL_TYPE == "Volcano":
+            self.llm = Volcano()
         # self.environment = PythonEnv()
         # self.environment = PythonJupyterEnv()
         self.environment = Env()
@@ -41,6 +43,8 @@ class BaseModule:
         _begin = message.find(begin_str)
         _end = message.find(end_str)
         while not (_begin == -1 or _end == -1):
+            import sys
+            sys.stdout.flush()
             result.append(message[_begin + len(begin_str):_end].lstrip("\n"))
             message = message[_end + len(end_str):]
             _begin = message.find(begin_str)
